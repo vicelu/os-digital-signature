@@ -1,0 +1,9 @@
+{
+    "name": "Digital-signature",
+    "description": "Create digital signatures, public and private keys",
+    "version": "0.1.0",
+    "dependencies": {
+        "crypto-js": "^4.0.0"
+    },
+    "devDependencies": {}
+  }
