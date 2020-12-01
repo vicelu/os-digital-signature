@@ -1,29 +1,29 @@
 const crypto = require('crypto')
-const path = require('path')
 const fs = require('fs')
 
-function encrypt(toEncrypt, relativeOrAbsolutePathToPublicKey) {
-const absolutePath = path.resolve(relativeOrAbsolutePathToPublicKey)
-const publicKey = fs.readFileSync(absolutePath, 'utf8')
-const buffer = Buffer.from(toEncrypt, 'utf8')
-const encrypted = crypto.publicEncrypt(publicKey, buffer)
-return encrypted.toString('base64')}
+const passphrase = fs.readFileSync('passphrase', 'utf8');
+const symmetricAlgorithm = 'aes-192-cbc'
+const asymmetricAlgorithm = 'aes-256-cbc'
 
-function decrypt(toDecrypt, relativeOrAbsolutePathtoPrivateKey) {
-const absolutePath = path.resolve(relativeOrAbsolutePathtoPrivateKey)
-const privateKey = fs.readFileSync(absolutePath, 'utf8')
-const buffer = Buffer.from(toDecrypt, 'base64')
-const decrypted = crypto.privateDecrypt(
-  {
-    key: privateKey.toString(),
-    passphrase: '',
+crypto.generateKeyPair('rsa', {
+  modulusLength: 4096,
+  publicKeyEncoding: {
+    type: 'spki',
+    format: 'pem'
   },
-  buffer,
-)
-return decrypted.toString('utf8')}
+  privateKeyEncoding: {
+    type: 'pkcs8',
+    format: 'pem',
+    cipher: asymmetricAlgorithm,
+    passphrase: passphrase
+  }
+}, (err, publicKey, privateKey) => {
+  if (!!err) { console.error(err); }
+  fs.writeFileSync('private_key.txt', privateKey);
+  fs.writeFileSync('public_key.txt', publicKey);
+  console.log('Successfully generated asymmetric keys!');
+});
 
-const enc = encrypt('hello', `<public.pem>`)
-console.log('enc', enc)
-
-const dec = decrypt(enc, `<private.pem>`)
-console.log('dec', dec)
+const symmetricKey = crypto.scryptSync(passphrase, 'salt', 24);
+fs.writeFileSync('secret_key.txt', symmetricKey);
+console.log('Successfully generated symmetric key!');
