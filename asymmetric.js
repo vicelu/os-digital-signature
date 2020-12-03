@@ -6,11 +6,18 @@ const passphrase = fs.readFileSync('passphrase', 'utf8');
 const publicKey = fs.readFileSync('public_key.txt', 'utf8');
 const privateKey = fs.readFileSync('private_key.txt', 'utf8');
 
-function encrypt() {
+function encryptWithPublicKey() {
     const buffer = Buffer.from(plaintext, 'utf8');
     const encrypted = crypto.publicEncrypt(publicKey, buffer);
     fs.writeFileSync('asymmetricEncrypted.txt', encrypted.toString('base64'));
     console.log('Successfully encrypted the plaintext using asymmetric encryption! Its in the asymmetricEncrypted.txt file.');
+}
+
+function encryptWithPrivateKey(pt, pk, pass) {
+    const buffer = Buffer.from(!!pt ? pt : plaintext, 'utf8');
+    const encrypted = crypto.privateEncrypt({key: !!pk ? pk : privateKey, passphrase: !!pass ? pass : passphrase}, buffer);
+    console.log('Successfully encrypted the plaintext using the private key!');
+    return encrypted.toString('base64');
 }
 
 function decrypt() {
@@ -21,5 +28,4 @@ function decrypt() {
     console.log('Successfully decrypted the ciphered text using asymmetric decryption! Its in the asymmetricDecrypted.txt file.');
 }
 
-encrypt();
-decrypt();
+module.exports = {encryptWithPublicKey, encryptWithPrivateKey, decrypt};

@@ -4,11 +4,13 @@ const fs = require('fs');
 const plaintext = fs.readFileSync('plaintext.txt', 'utf8');
 const algorithm = 'sha256';
 
-function hash() {
+function hash(pt) {
     const hash = crypto.createHash(algorithm);
-    hash.update(plaintext);
-    fs.writeFileSync('hash.txt', hash.digest('hex'));
+    hash.update(!!pt ? pt : plaintext);
+    const hashed = hash.digest('hex');
+    fs.writeFileSync('hash.txt', hashed);
     console.log('Successfully hashed the plaintext! Its in the hash.txt file.');
+    return hashed;
 }
 
-hash();
+module.exports = {hash};

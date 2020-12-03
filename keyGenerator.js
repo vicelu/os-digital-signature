@@ -33,3 +33,5 @@ function generateSymmetricKey() {
 
 generateAsymmetricKeys();
 generateSymmetricKey();
+
+module.exports = {generateAsymmetricKeys, generateSymmetricKey}
