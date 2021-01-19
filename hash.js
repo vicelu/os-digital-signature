@@ -13,4 +13,6 @@ function hash(pt) {
     return hashed;
 }
 
+// To use the hash function right away with the plaintext file, uncomment this
+// hash(null);
 module.exports = {hash};

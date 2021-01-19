@@ -20,7 +20,7 @@ function encryptWithPrivateKey(pt, pk, pass) {
     return encrypted.toString('base64');
 }
 
-function decrypt() {
+function decryptWithPrivateKey() {
     const toDecrypt = fs.readFileSync('asymmetricEncrypted.txt', 'utf-8');
     const buffer = Buffer.from(toDecrypt, 'base64');
     const decrypted = crypto.privateDecrypt({key: privateKey, passphrase: passphrase}, buffer);
@@ -28,4 +28,17 @@ function decrypt() {
     console.log('Successfully decrypted the ciphered text using asymmetric decryption! Its in the asymmetricDecrypted.txt file.');
 }
 
-module.exports = {encryptWithPublicKey, encryptWithPrivateKey, decrypt};
+function decryptWithPublicKey() {
+    const toDecrypt = fs.readFileSync('encryptedWithPrivateKey.txt', 'utf-8');
+    const buffer = Buffer.from(toDecrypt, 'base64');
+    const decrypted = crypto.publicDecrypt({key: publicKey}, buffer);
+    fs.writeFileSync('decryptedWithPublicKey.txt', decrypted.toString('utf8'));
+    console.log('Successfully decrypted the ciphered text using asymmetric decryption! Its in the decryptedWithPublicKey.txt file.');
+}
+
+// To encrypt, uncomment this
+//ncryptWithPublicKey();
+// Decrypt
+//decryptWithPrivateKey();
+//decryptWithPublicKey();
+module.exports = {encryptWithPublicKey, encryptWithPrivateKey, decryptWithPrivateKey, decryptWithPublicKey};
