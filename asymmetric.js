@@ -37,8 +37,8 @@ function decryptWithPublicKey() {
 }
 
 // To encrypt, uncomment this
-//ncryptWithPublicKey();
+encryptWithPublicKey();
 // Decrypt
-//decryptWithPrivateKey();
+decryptWithPrivateKey();
 //decryptWithPublicKey();
 module.exports = {encryptWithPublicKey, encryptWithPrivateKey, decryptWithPrivateKey, decryptWithPublicKey};
